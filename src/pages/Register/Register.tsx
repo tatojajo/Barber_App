@@ -1,11 +1,16 @@
 import React from 'react';
-import { useFormik } from 'formik';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import { Grid, Box, Typography } from '@mui/material';
 import * as yup from 'yup';
-import { TextField, Button, Typography, Box } from '@mui/material';
-
-import { RegisterContainer, RegisterForm } from './Register.styled';
-
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Container from '@mui/material/Container';
+import { useFormik } from 'formik';
+import { Link } from 'react-router-dom';
 interface RegisterFormData {
+  firstName: string;
+  lastName: string;
   username: string;
   email: string;
   password: string;
@@ -13,6 +18,8 @@ interface RegisterFormData {
 }
 
 const initialValues: RegisterFormData = {
+  firstName: '',
+  lastName: '',
   username: '',
   email: '',
   password: '',
@@ -29,82 +36,122 @@ const validationSchema = yup.object().shape({
 });
 
 const Register = () => {
-  const {
-    values,
-    handleSubmit,
-    handleChange,
-    setFieldValue,
-    errors,
-    validateForm,
-    submitForm,
-  } = useFormik({
+  const { values, handleSubmit, handleChange, errors } = useFormik({
     initialValues,
     validationSchema,
     onSubmit: (values: RegisterFormData) => {
-      console.log(values);
+      const users = JSON.parse(localStorage.getItem('user')!) || [];
+      localStorage.setItem('user', JSON.stringify([...users, values]));
     },
   });
 
-  console.log('values', values);
-  console.log('errors', errors);
-
   return (
-    <RegisterContainer>
-      <Typography variant="h4" color="#000">
-        Register
-      </Typography>
-      <RegisterForm onSubmit={handleSubmit}>
-        <Box sx={{ py: 2 }}>
-          <TextField
-            label="Username"
-            name="username"
-            value={values.username}
-            onChange={handleChange}
-            error={!!errors.username}
-            helperText={errors.username}
-          />
+    <Container component="main" maxWidth="xs">
+      <Box
+        sx={{
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <LockOutlinedIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Sign up
+        </Typography>
+        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                name="firstName"
+                fullWidth
+                id="firstName"
+                label="First Name"
+                value={values.firstName}
+                onChange={handleChange}
+                error={!!errors.firstName}
+                helperText={errors.firstName}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                name="lastName"
+                fullWidth
+                id="lastName"
+                label="Last Name"
+                value={values.lastName}
+                onChange={handleChange}
+                error={!!errors.lastName}
+                helperText={errors.lastName}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                name="username"
+                fullWidth
+                id="userName"
+                label="Username"
+                value={values.username}
+                onChange={handleChange}
+                error={!!errors.username}
+                helperText={errors.username}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                name="email"
+                fullWidth
+                id="email"
+                label="mail"
+                value={values.email}
+                onChange={handleChange}
+                error={!!errors.email}
+                helperText={errors.email}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                type="password"
+                name="password"
+                fullWidth
+                label="Password"
+                value={values.password}
+                onChange={handleChange}
+                error={!!errors.password}
+                helperText={errors.password}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                type="password"
+                name="password2"
+                fullWidth
+                label="Confirm Password"
+                value={values.password2}
+                onChange={handleChange}
+                error={!!errors.password2}
+                helperText={errors.password2}
+              />
+            </Grid>
+          </Grid>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Sign Up
+          </Button>
+          <Grid container justifyContent="flex-end">
+            <Grid item>
+              <Link to="/login">Already have an account? Sign in</Link>
+            </Grid>
+          </Grid>
         </Box>
-
-        <Box sx={{ py: 2 }}>
-          <TextField
-            label="Email"
-            name="email"
-            value={values.email}
-            onChange={handleChange}
-            error={!!errors.email}
-            helperText={errors.email}
-          />
-        </Box>
-
-        <Box sx={{ py: 2 }}>
-          <TextField
-            label="Password"
-            name="password"
-            type="password"
-            value={values.password}
-            onChange={handleChange}
-            error={!!errors.password}
-            helperText={errors.password}
-          />
-        </Box>
-
-        <Box sx={{ py: 2 }}>
-          <TextField
-            label="Confirm Password"
-            name="password2"
-            type="password"
-            value={values.password2}
-            onChange={handleChange}
-            error={!!errors.password2}
-            helperText={errors.password2}
-          />
-        </Box>
-
-        <Button variant="contained" color="primary" onClick={submitForm}>
-          Register
-        </Button>
-      </RegisterForm>
-    </RegisterContainer>
+      </Box>
+    </Container>
   );
 };
 
