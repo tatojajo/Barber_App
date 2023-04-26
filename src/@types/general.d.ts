@@ -6,7 +6,7 @@ type UserItem = {
   password: string;
 };
 
-type BarberItem = {
+export type BarberItem = {
   id: string;
   firstName: string;
   lastName: string;
@@ -19,3 +19,8 @@ type BarberItem = {
   description: string;
   price: number;
 };
+
+
+export type BarberCardType = {
+  barber:BarberItem
+}

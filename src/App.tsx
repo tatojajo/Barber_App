@@ -4,13 +4,13 @@ import {
   Routes,
   Route,
   useNavigate,
-  useParams,
-  useLocation,
 } from 'react-router-dom';
 
 import Register from './pages/Register';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import ProfilePage from './components/Profile';
+
 
 import { isUserAuthenticated } from './utils/helpers';
 
@@ -19,6 +19,7 @@ function App() {
 
   useEffect(() => {
     if (!isUserAuthenticated()) navigate('/login');
+    if(isUserAuthenticated()) navigate('/dashboard')
   }, [isUserAuthenticated()]);
 
   return (
@@ -34,6 +35,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/profile/:id" element={<ProfilePage  />} />
       </Routes>
     </Box>
   );
